@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Tab from './screens/Tab'
 import SearchGif from './screens/SearchGif'
 import CreateDump from './screens/CreateDump';
+import store from './store'
+import { Provider } from 'react-redux'
 import DumpDetail from './screens/DumpDetail';
 
 
@@ -14,6 +16,7 @@ export default function App() {
   const Stack = createNativeStackNavigator()
 
   return (
+    <Provider store={store}>
 
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
@@ -31,6 +34,7 @@ export default function App() {
 
         </NavigationContainer>
       </SafeAreaView>
+    </Provider>
 
   );
 }
