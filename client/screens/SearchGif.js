@@ -58,7 +58,7 @@ export default function SearchGif({ route }) {
     },[offset])
 
     useEffect(() => {
-        if (debouncedSearch ) {
+        if (debouncedSearch && search ) {
             dispatch(fetchGifs(search))            
         }
         
@@ -87,8 +87,6 @@ export default function SearchGif({ route }) {
                         marginVertical: 10,
                     }} />
 
-                <Button title="Search" onPress={fetchGifs}
-                />
             </View>
 
 

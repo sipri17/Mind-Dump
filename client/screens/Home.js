@@ -31,6 +31,26 @@ export default function Home() {
         }, [navigation])
     )
 
+    function useDebounce(value , delay) {
+        const [debouncedValue, setDebouncedValue] = useState(value)
+
+        useEffect(() => {
+            const handler = setTimeout(() => {
+                setDebouncedValue(value);
+            }, delay);
+
+            return () => {
+                clearTimeout(handler);
+            }
+
+        }, [value, delay]
+
+        )
+        return debouncedValue
+    }
+
+    const debouncedSearch = useDebounce(search, 500)
+
 
     function filterDump() {
         if (search === '') {
@@ -40,6 +60,10 @@ export default function Home() {
             setFilteredArr(newArr)
         }
     }
+
+    useEffect(()=>{
+        filterDump()
+    },[debouncedSearch])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -55,8 +79,7 @@ export default function Home() {
                         marginVertical: 10,
                     }} />
 
-                <Button title="Search" onPress={filterDump}
-                />
+                
             </View>
             <MasonryList
                 data={filteredArr}
