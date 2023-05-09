@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Tab from './screens/Tab'
 import SearchGif from './screens/SearchGif'
 import CreateDump from './screens/CreateDump';
-
+import DumpDetail from './screens/DumpDetail';
 
 
 
@@ -25,6 +25,7 @@ export default function App() {
             <Stack.Screen name="Home" component={Home} options={{ title: "MindDump" }}/>
             <Stack.Screen name="SearchGif" component={SearchGif} options={{ title: "SearchGif" }} />
             <Stack.Screen name="CreateDump" component={CreateDump} options={{ title: "CreateDump" }} />
+            <Stack.Screen name="DumpDetail" component={DumpDetail} options={{ title: "DumpDetail" }} />
 
           </Stack.Navigator>
 

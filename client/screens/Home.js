@@ -3,12 +3,14 @@ import { StyleSheet, Text, View, Image, Pressable, TextInput, Button } from 'rea
 import MasonryList from '@react-native-seoul/masonry-list';
 import { useState, useEffect, useCallback } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
     const [items, setItems] = useState([]);
-    const [filteredArr, setFilteredArr] = useState(items)
+    const [filteredArr,setFilteredArr] = useState(items)
+    const navigation = useNavigation();
     const [search, setSearch] = useState('')
 
     // Load the items from local storage when the component mounts
@@ -18,24 +20,25 @@ export default function Home() {
             const parsedItems = (JSON.parse(storedItems))
             parsedItems.reverse() //sort from the newest
             setItems(parsedItems);
-            setFilteredArr(parsedItems)
         }
     }
 
-    useEffect(() => {
-        loadItems()
-    }, [])
-
+    useFocusEffect(
+        useCallback(() => {
+            loadItems()
+            setSearch('')
+        }, [navigation])
+    )
+ 
 
     function filterDump() {
         if (search === '') {
             setFilteredArr(items);
-        } else {
-            const newArr = items.filter(item => item.title.includes(search))
+        }else{
+            const newArr = items.filter(item =>  item.title.includes(search))
             setFilteredArr(newArr)
         }
     }
-    console.log(items,'<<<items');
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -46,7 +49,7 @@ export default function Home() {
 
             }}>
 
-                <TextInput value={search} onChangeText={setSearch} placeholder='Search gif'
+                <TextInput value={search} onChangeText={setSearch} placeholder='Search dump'
                     style={{
                         marginHorizontal: 5,
                         marginTop: 2,
@@ -69,7 +72,13 @@ export default function Home() {
                                     width: "100%",
                                     padding: 1
                                 })}
-                               
+                                onPress={
+                                    () =>
+                                        navigation.navigate({
+                                            name: 'DumpDetail',
+                                            params: { ...item }
+                                        })
+                                }
                             >
                                 <Image
                                     source={{ uri: item.url }}
