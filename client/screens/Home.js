@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
     const [items, setItems] = useState([]);
-    const [filteredArr,setFilteredArr] = useState(items)
+    const [filteredArr, setFilteredArr] = useState([])
     const navigation = useNavigation();
     const [search, setSearch] = useState('')
 
@@ -20,6 +20,7 @@ export default function Home() {
             const parsedItems = (JSON.parse(storedItems))
             parsedItems.reverse() //sort from the newest
             setItems(parsedItems);
+            setFilteredArr(parsedItems);
         }
     }
 
@@ -29,13 +30,13 @@ export default function Home() {
             setSearch('')
         }, [navigation])
     )
- 
+
 
     function filterDump() {
         if (search === '') {
             setFilteredArr(items);
-        }else{
-            const newArr = items.filter(item =>  item.title.includes(search))
+        } else {
+            const newArr = items.filter(item => item.title.includes(search))
             setFilteredArr(newArr)
         }
     }
@@ -43,16 +44,15 @@ export default function Home() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{
-                backgroundColor: "#ECE4DB",
-                borderRadius: 15,
-                marginVertical: 2,
-
+                marginVertical: 5,
             }}>
 
                 <TextInput value={search} onChangeText={setSearch} placeholder='Search dump'
                     style={{
+                        borderRadius: 5,
+                        backgroundColor: "#ECE4DB",
                         marginHorizontal: 5,
-                        marginTop: 2,
+                        marginVertical: 10,
                     }} />
 
                 <Button title="Search" onPress={filterDump}
