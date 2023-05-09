@@ -62,11 +62,29 @@ export default function CreateDump({ route }) {
         saveItems();
     }, [items]);
 
+    function getCurrentDate() {
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        let suffix = 'th';
+      
+        if (day === 1 || day === 21 || day === 31) {
+          suffix = 'st';
+        } else if (day === 2 || day === 22) {
+          suffix = 'nd';
+        } else if (day === 3 || day === 23) {
+          suffix = 'rd';
+        }
+      
+        return `${month} ${day}${suffix}, ${date.getFullYear()}`;
+      }
+      
+
     const handleAddItem = () => {
         const newItem = {
             url,
             title,
-            date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            date: getCurrentDate(),
             text
         };
         setItems([...items, newItem]);
