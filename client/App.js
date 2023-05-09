@@ -1,26 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,Image } from 'react-native';
-import MasonryList from '@react-native-seoul/masonry-list';
-import SearchGif from './screens/SearchGif';
-import CreateDump from './screens/CreateDump';
+import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { NavigationContainer } from '@react-navigation/native'
 import Home from './screens/Home';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Tab from './screens/Tab'
+import SearchGif from './screens/SearchGif'
+import CreateDump from './screens/CreateDump';
+
+
 
 
 export default function App() {
-
+  const Stack = createNativeStackNavigator()
 
   return (
-    <View style={{ flex: 1 }}>
-      <Home/>
-    </View>
+
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Tab" component={Tab} options={{
+              headerShown: false
+            }}
+            />
+            <Stack.Screen name="Home" component={Home} options={{ title: "MindDump" }}/>
+            <Stack.Screen name="SearchGif" component={SearchGif} options={{ title: "SearchGif" }} />
+            <Stack.Screen name="CreateDump" component={CreateDump} options={{ title: "CreateDump" }} />
+
+          </Stack.Navigator>
+
+        </NavigationContainer>
+      </SafeAreaView>
+
   );
-};
+}
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    backgroundColor: '#fff'
+  }
 });
