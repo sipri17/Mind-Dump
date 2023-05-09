@@ -135,7 +135,7 @@ export default function SearchGif({ route }) {
                 loading={loading}
                 onRefresh={fetchGifs}
                 onEndReachedThreshold={0.1}
-                onEndReached={() => fetchMore()}
+                onEndReached={fetchMore}
                 showsVerticalScrollIndicator={false}
 
             />

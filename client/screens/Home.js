@@ -12,6 +12,9 @@ export default function Home() {
     const [filteredArr, setFilteredArr] = useState([])
     const navigation = useNavigation();
     const [search, setSearch] = useState('')
+    const [limit, setLimit] = useState(8)
+    const [slicedArray, setSlicedArray] = useState([])
+    const [loading, setLoading] = useState(false)
 
     // Load the items from local storage when the component mounts
     async function loadItems() {
@@ -21,17 +24,19 @@ export default function Home() {
             parsedItems.reverse() //sort from the newest
             setItems(parsedItems);
             setFilteredArr(parsedItems);
+            setSlicedArray(parsedItems.slice(0, limit))
         }
     }
 
     useFocusEffect(
         useCallback(() => {
+            setLimit(10)
             loadItems()
             setSearch('')
         }, [navigation])
     )
 
-    function useDebounce(value , delay) {
+    function useDebounce(value, delay) {
         const [debouncedValue, setDebouncedValue] = useState(value)
 
         useEffect(() => {
@@ -55,15 +60,35 @@ export default function Home() {
     function filterDump() {
         if (search === '') {
             setFilteredArr(items);
+            setSlicedArray(items.slice(0, limit))
+
         } else {
             const newArr = items.filter(item => item.title.includes(search))
             setFilteredArr(newArr)
+            setSlicedArray(newArr.slice(0, limit))
         }
     }
 
-    useEffect(()=>{
-        filterDump()
-    },[debouncedSearch])
+    const displayMoreGifs = () => {
+        if (!loading && limit<=items.length) {
+            setLoading(true)
+            setTimeout(() => {
+                setLimit(limit => limit + 5);
+            }, 500)
+        }
+    }
+    
+    useEffect(() => {
+        const newArr = filteredArr.slice(0, limit)
+        console.log(filteredArr.length, '<<length');
+        setSlicedArray(newArr)
+        setLoading(false)
+    }, [limit])
+
+
+    useEffect(() => {
+        filterDump()        
+    }, [debouncedSearch])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -79,10 +104,10 @@ export default function Home() {
                         marginVertical: 10,
                     }} />
 
-                
+
             </View>
             <MasonryList
-                data={filteredArr}
+                data={slicedArray}
                 numColumns={2}
                 renderItem={({ item }) => {
                     return (
@@ -130,6 +155,7 @@ export default function Home() {
                 }}
                 onEndReachedThreshold={0.1}
                 showsVerticalScrollIndicator={false}
+                onEndReached={displayMoreGifs}
                 onRefresh={loadItems}
 
             />
