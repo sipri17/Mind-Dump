@@ -3,33 +3,36 @@ import { StyleSheet, Text, View, Image, Pressable, TextInput, Button } from 'rea
 import MasonryList from '@react-native-seoul/masonry-list';
 import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { setInputState } from '../store/actions/actionCreator'
+import { useDispatch, useSelector } from "react-redux"
+
 
 import { apiKey } from '@env'
 
 
 
-export default function SearchGif() {
+export default function SearchGif({ route }) {
     const [gifs, setGifs] = useState([]);
     const [offset, setOffset] = useState(0);
     const [loading, setLoading] = useState(false)
-    const [input, setInput] = useState('')
+    const [search, setSearch] = useState('')
+    const navigation = useNavigation();
+    const dispatch = useDispatch()
 
 
     const getGifs = async () => {
         const response = await fetch(
-            `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${input}&limit=20&offset=${offset}&rating=g&lang=en`
+            `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${search}&limit=20&offset=${offset}&rating=g&lang=en`
         );
-
         return response.json();
     };
 
-    const fetchGifs = async (input) => {
+    const fetchGifs = async () => {
         try {
             setLoading(true)
-            const response = await getGifs(input);
+            const response = await getGifs();
             setGifs(response.data); // Set new gifs as a new list
-            console.log(apiKey, '<<<apikey');
-
         } catch (error) {
             console.log(error, '<<error');
         } finally {
@@ -58,7 +61,6 @@ export default function SearchGif() {
 
 
 
-
     return (
 
 
@@ -70,7 +72,7 @@ export default function SearchGif() {
 
             }}>
 
-                <TextInput value={input} onChangeText={setInput} placeholder='Search gif'
+                <TextInput value={search} onChangeText={setSearch} placeholder='Search gif'
                     style={{
                         marginHorizontal: 5,
                         marginTop: 2,
@@ -79,7 +81,6 @@ export default function SearchGif() {
                     }} />
 
                 <Button title="Search" onPress={fetchGifs}
-
                 />
             </View>
 
@@ -91,17 +92,37 @@ export default function SearchGif() {
                     return (
                         <View style={{ margin: 2 }}>
 
-                            <Image
-                                source={{ uri: item.images.preview_gif.url }}
-                                style={{ height: 200, borderRadius: 10 }}
-                            />
-                            <Text style={{
+                            <Pressable
+                                style={({ pressed }) => ({
+                                    backgroundColor: '#ccd5ae',
+                                    borderRadius: 3,
+                                    width: "100%",
+                                    padding: 1
+                                })}
+                                title={item.title}
+                                onPress={
+                                    () => {
+                                        dispatch(setInputState({ url: item.images.preview_gif.url }))
+                                        console.log({ url: item.images.preview_gif.url }, '<<triggered in searchGif');
+                                        navigation.navigate({
+                                            name: 'CreateDump',
+                                        })
+                                    }
 
-                            }}>
-                                {item.title}
+                                }
+                            >
+                                <Image
+                                    source={{ uri: item.images.preview_gif.url }}
+                                    style={{ height: 200, borderRadius: 10 }}
+                                />
+                                <Text style={{
+                                    paddingHorizontal: 2,
+                                    fontSize: 13
+                                }}>
+                                    {item.title}
 
-                            </Text>
-
+                                </Text>
+                            </Pressable>
 
                         </View>
                     )
