@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,Image } from 'react-native';
-
 import MasonryList from '@react-native-seoul/masonry-list';
-
+import SearchGif from './screens/SearchGif';
 
 
 export default function App() {
@@ -17,18 +16,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }}>
-      <MasonryList
-        data={data}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <View style={{ margin: 5 }}>
-            <Image
-              source={{ uri: item.uri }}
-              style={{ height: 200, borderRadius: 10 }}
-            />
-          </View>
-        )}
-      />
+      <SearchGif />
     </View>
   );
 };
