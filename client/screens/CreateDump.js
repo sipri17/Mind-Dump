@@ -126,46 +126,18 @@ export default function CreateDump({ route }) {
         <SafeAreaView style={{ flex: 1 }}>
 
             {url ? (
-                <View style={{
-                    flex: 3,
-                    marginTop: 5,
-                    flexDirection: "row",
-                    backgroundColor: "#ccd5ae"
-                }}>
+                <View style={styles.viewImage}>
                     <Image source={{ uri: url }} style={{ flex: 5, marginVertical: 2 }} resizeMode='contain' />
                     <Pressable onPress={handleDelete}
-                        style={{
-                            flex: 2,
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
+                        style={styles.pressableDelete}
                     >
-                        <Text style={{
-                            flexDirection: "row",
-                            backgroundColor: "#fb5607",
-                            color: "white",
-                            borderRadius: 5,
-                            padding: 4
-                        }}>Delete Image</Text>
+                        <Text style={styles.deleteImageText}>Delete Image</Text>
                     </Pressable>
                 </View>
             ) : (
                 <Pressable onPress={navigateToSearchGif}
-                    style={{
-                        flex: 3,
-                        alignItems: "center",
-                        flexDirection: 'row',
-                        justifyContent: "space-around",
-                        backgroundColor: "#ccd5ae"
-                    }}
-                >
-                    <Text
-                        style={{
-                            backgroundColor: "#fefae0",
-                            borderRadius: 5,
-                            padding: 4
-                        }}
-                    >
+                    style={styles.pressableNavigateToSearchGif}>
+                    <Text style={styles.chooseImageText}>
                         Choose Image
                     </Text>
                 </Pressable>
@@ -174,18 +146,7 @@ export default function CreateDump({ route }) {
                 value={title}
                 onChangeText={setTitle}
                 placeholder="Enter Title"
-                style={{
-                    flex: 2,
-                    backgroundColor: '#FAEDCD',
-                    borderRadius: 5,
-                    marginHorizontal: 5,
-                    marginTop: 5,
-                    fontWeight: 'bold',
-                    fontSize: 25,
-                    padding: 3
-                }}
-            />
-
+                style={styles.setTitleTextInput} />
             <View style={styles.richTextContainer}>
                 <RichEditor
                     ref={richText}
@@ -225,10 +186,7 @@ export default function CreateDump({ route }) {
 
 
             <Button title="Save Dump" onPress={handleAddItem}
-                style={{
-                    flex: 3,
-                    backgroundColor: 'green',
-                }}
+                style={styles.saveDumpButton}
             />
 
 
@@ -255,7 +213,6 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 20
     },
-
     richTextEditorStyle: {
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -271,9 +228,11 @@ const styles = StyleSheet.create({
         elevation: 4,
         fontSize: 20,
         flex: 1,
-
     },
-
+    saveDumpButton:{
+        flex: 3,
+        backgroundColor: 'green',
+    },
     richTextToolbarStyle: {
         backgroundColor: "#c6c3b3",
         borderColor: "#c6c3b3",
@@ -281,4 +240,44 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderWidth: 1,
     },
+    pressableDelete :{
+        flex: 2,
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    pressableNavigateToSearchGif:{
+        flex: 3,
+        alignItems: "center",
+        flexDirection: 'row',
+        justifyContent: "space-around",
+        backgroundColor: "#ccd5ae"
+    },
+    chooseImageText:{
+        backgroundColor: "#fefae0",
+        borderRadius: 5,
+        padding: 4
+    },
+    setTitleTextInput:{
+        flex: 2,
+        backgroundColor: '#FAEDCD',
+        borderRadius: 5,
+        marginHorizontal: 5,
+        marginTop: 5,
+        fontWeight: 'bold',
+        fontSize: 25,
+        padding: 3
+    },
+    deleteImageText:{
+        flexDirection: "row",
+        backgroundColor: "#fb5607",
+        color: "white",
+        borderRadius: 5,
+        padding: 4
+    },
+    viewImage:{
+        flex: 3,
+        marginTop: 5,
+        flexDirection: "row",
+        backgroundColor: "#ccd5ae"
+    }
 });

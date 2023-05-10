@@ -91,19 +91,10 @@ export default function Home() {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{
-                marginVertical: 5,
-            }}>
+            <View style={{marginVertical: 5}}>
 
                 <TextInput value={search} onChangeText={setSearch} placeholder='Search dump'
-                    style={{
-                        borderRadius: 5,
-                        backgroundColor: "#ECE4DB",
-                        marginHorizontal: 5,
-                        marginVertical: 10,
-                    }} />
-
-
+                    style={styles.textInputSearch} />
             </View>
             <MasonryList
                 data={slicedArray}
@@ -111,14 +102,8 @@ export default function Home() {
                 renderItem={({ item }) => {
                     return (
                         <View style={{ margin: 2 }}>
-
                             <Pressable
-                                style={({ pressed }) => ({
-                                    backgroundColor: '#ccd5ae',
-                                    borderRadius: 3,
-                                    width: "100%",
-                                    padding: 1
-                                })}
+                                style={({ pressed }) => (styles.pressableNavigate)}
                                 onPress={
                                     () =>
                                         navigation.navigate({
@@ -129,10 +114,7 @@ export default function Home() {
                             >
                                 <Image
                                     source={{ uri: item.url }}
-                                    style={{
-                                        height: 200,
-                                        borderRadius: 10
-                                    }}
+                                    style={styles.image}
                                 />
                                 <Text style={{
                                     fontWeight: "bold",
@@ -141,10 +123,7 @@ export default function Home() {
                                 }}>
                                     {item.title}
                                 </Text>
-                                <Text style={{
-                                    paddingHorizontal: 2,
-                                    fontSize: 13
-                                }}>
+                                <Text style={styles.textDate}>
                                     {item.date}
                                 </Text>
                             </Pressable>
@@ -164,3 +143,25 @@ export default function Home() {
     );
 };
 
+const styles = StyleSheet.create({
+    textInputSearch:{
+        borderRadius: 5,
+        backgroundColor: "#ECE4DB",
+        marginHorizontal: 5,
+        marginVertical: 10,
+    },
+    pressableNavigate:{
+        backgroundColor: '#ccd5ae',
+        borderRadius: 3,
+        width: "100%",
+        padding: 1
+    },
+    image:{
+        height: 200,
+        borderRadius: 10
+    },
+    textDate:{
+        paddingHorizontal: 2,
+        fontSize: 13
+    }
+})

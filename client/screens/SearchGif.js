@@ -66,28 +66,14 @@ export default function SearchGif({ route }) {
 
 
 
-
-
-
     return (
 
 
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{
-                marginVertical: 5,
-
-            }}>
-
+            <View style={{marginVertical: 5}}>
                 <TextInput value={search} onChangeText={setSearch} placeholder='Search gif'
-                     style={{
-                        borderRadius: 5,
-                        backgroundColor: "#ECE4DB",
-                        marginHorizontal: 5,
-                        marginVertical: 10,
-                    }} />
-
+                     style={styles.textInputSearch} />
             </View>
-
 
             <MasonryList
                 data={gifs}
@@ -97,12 +83,7 @@ export default function SearchGif({ route }) {
                         <View style={{ margin: 2 }}>
 
                             <Pressable
-                                style={({ pressed }) => ({
-                                    backgroundColor: '#ccd5ae',
-                                    borderRadius: 3,
-                                    width: "100%",
-                                    padding: 1
-                                })}
+                                style={({ pressed }) => (styles.pressableNavigate)}
                                 title={item.title}
                                 onPress={
                                     () => {
@@ -141,5 +122,20 @@ export default function SearchGif({ route }) {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    textInputSearch:{
+        borderRadius: 5,
+        backgroundColor: "#ECE4DB",
+        marginHorizontal: 5,
+        marginVertical: 10,
+    },
+    pressableNavigate:{
+        backgroundColor: '#ccd5ae',
+        borderRadius: 3,
+        width: "100%",
+        padding: 1
+    }
+})
 
 
