@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable, TextInput, Button } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from "react-redux"
 import { setInputState } from '../store/actions/actionCreator'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
 
 
 
@@ -15,7 +15,6 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export default function CreateDump({ route }) {
     const [items, setItems] = useState([]);
-    const [text, setText] = useState('');
     const [title, setTitle] = useState('');
     const navigation = useNavigation();
     const dispatch = useDispatch()
@@ -23,15 +22,29 @@ export default function CreateDump({ route }) {
     const [url, setUrl] = useState(inputState.url);
 
 
-    const handleDelete = () => {
-        setUrl('');
-        dispatch(setInputState({ url: "", title, text }))
-        console.log(inputState.url, 'triggered delete');
+    const [text, setText] = useState("");
+    const [showTextError, setTextError] = useState(false);
+    const [showImageError, setImageError] = useState(false);
+    const richText = useRef();
 
+    const richTextHandle = (descriptionText) => {
+        if (descriptionText) {
+            setTextError(false);
+            setText(descriptionText);
+        } else {
+            setTextError(true);
+            setText("");
+        }
     };
 
 
 
+    const handleDelete = () => {
+        setUrl('');
+        dispatch(setInputState({ url: "", title, text:text }))
+        console.log(inputState.url, 'triggered delete');
+
+    };
 
 
     // Load the items from local storage when the component mounts
@@ -67,37 +80,48 @@ export default function CreateDump({ route }) {
         const day = date.getDate();
         const month = date.toLocaleString('default', { month: 'long' });
         let suffix = 'th';
-      
+
         if (day === 1 || day === 21 || day === 31) {
-          suffix = 'st';
+            suffix = 'st';
         } else if (day === 2 || day === 22) {
-          suffix = 'nd';
+            suffix = 'nd';
         } else if (day === 3 || day === 23) {
-          suffix = 'rd';
+            suffix = 'rd';
         }
-      
+
         return `${month} ${day}${suffix}, ${date.getFullYear()}`;
-      }
-      
+    }
+
 
     const handleAddItem = () => {
-        const newItem = {
-            url,
-            title,
-            date: getCurrentDate(),
-            text
-        };
-        setItems([...items, newItem]);
-        setUrl('');
-        setText('');
-        setTitle('');
-        navigation.goBack();
+        const replaceHTML = text.replace(/<(.|\n)*?>/g, "").trim();
+        const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
+
+        if (replaceWhiteSpace.length <= 0) {
+            setTextError(true);
+        }else if(!url){
+            setImageError(true)
+        }else {
+            // send data to your server!
+            const newItem = {
+                url,
+                title,
+                date: getCurrentDate(),
+                text
+            };
+            setItems([...items,newItem]);
+            setUrl('');
+            
+            setTitle('');
+            navigation.goBack();
+        }
 
     };
 
     // console.log(items, '<<<ITEMS');
 
     const navigateToSearchGif = () => {
+        setImageError(false)
         dispatch(setInputState({ title, text }))
         navigation.navigate('SearchGif');
     };
@@ -166,23 +190,45 @@ export default function CreateDump({ route }) {
                     padding: 3
                 }}
             />
-            <TextInput
-                value={text}
-                onChangeText={setText}
-                placeholder="Enter text"
-                multiline={true}
-                textAlignVertical="top"
-                textAlign="left"
-                style={{
-                    flex: 15,
-                    backgroundColor: '#FEFAE0',
-                    borderRadius: 15,
-                    marginHorizontal: 5,
-                    marginVertical: 7,
-                    padding: 5,
-                    fontSize : 20
-                }}
-            />
+
+            <View style={styles.richTextContainer}>
+                <RichEditor
+                    ref={richText}
+                    onChange={richTextHandle}
+                    placeholder="Write your cool content here :)"
+                    androidHardwareAccelerationDisabled={true}
+                    style={styles.richTextEditorStyle}
+                    initialHeight={250}
+                />
+                <RichToolbar
+                    editor={richText}
+                    selectedIconTint="#873c1e"
+                    iconTint="#312921"
+                    actions={[
+                        actions.insertImage,
+                        actions.setBold,
+                        actions.setItalic,
+                        actions.insertBulletsList,
+                        actions.insertOrderedList,
+                        actions.insertLink,
+                        actions.setStrikethrough,
+                        actions.setUnderline,
+                    ]}
+                    style={styles.richTextToolbarStyle}
+                />
+            </View>
+            {showTextError && (
+                <Text style={styles.errorTextStyle}>
+                    Your content shouldn't be empty 🤔
+                </Text>
+            )}
+            {showImageError && (
+                <Text style={styles.errorTextStyle}>
+                    Your image shouldn't be empty 🤔
+                </Text>
+            )}
+
+
             <Button title="Save Dump" onPress={handleAddItem}
                 style={{
                     flex: 3,
@@ -197,3 +243,47 @@ export default function CreateDump({ route }) {
     );
 };
 
+
+const styles = StyleSheet.create({
+    errorTextStyle: {
+        color: "#FF0000",
+        marginBottom: 10,
+    },
+    richTextContainer: {
+        display: "flex",
+        flexDirection: "column-reverse",
+        flex: 15,
+        backgroundColor: '#FEFAE0',
+        borderRadius: 15,
+        marginHorizontal: 5,
+        marginVertical: 7,
+        padding: 5,
+        fontSize: 20
+    },
+
+    richTextEditorStyle: {
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderWidth: 1,
+        borderColor: "#ccaf9b",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+        fontSize: 20,
+        flex: 1,
+
+    },
+
+    richTextToolbarStyle: {
+        backgroundColor: "#c6c3b3",
+        borderColor: "#c6c3b3",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderWidth: 1,
+    },
+});
