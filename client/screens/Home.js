@@ -4,8 +4,8 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import { useState, useEffect, useCallback } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Home() {
     const [items, setItems] = useState([]);
@@ -63,7 +63,7 @@ export default function Home() {
             setSlicedArray(items.slice(0, limit))
 
         } else {
-            const newArr = items.filter(item => item.title.includes(search))
+            const newArr = items.filter(item => item.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
             setFilteredArr(newArr)
             setSlicedArray(newArr.slice(0, limit))
         }
@@ -80,7 +80,6 @@ export default function Home() {
     
     useEffect(() => {
         const newArr = filteredArr.slice(0, limit)
-        console.log(filteredArr.length, '<<length');
         setSlicedArray(newArr)
         setLoading(false)
     }, [limit])
