@@ -12,8 +12,6 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 export default function DumpDetail({ route }) {
     const { url, text, title, date } = route.params
 
-    console.log(text, '<<text');
-
 
 
 

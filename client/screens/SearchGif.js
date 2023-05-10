@@ -45,7 +45,6 @@ export default function SearchGif({ route }) {
             setLoading(true)
             setTimeout(()=>{
                 setOffset(offset => offset + 20);
-                console.log('triggered');
             },500)
         }
         
@@ -108,7 +107,6 @@ export default function SearchGif({ route }) {
                                 onPress={
                                     () => {
                                         dispatch(setInputState({ url: item.images.preview_gif.url }))
-                                        console.log({ url: item.images.preview_gif.url }, '<<triggered in searchGif');
                                         navigation.navigate({
                                             name: 'CreateDump',
                                         })

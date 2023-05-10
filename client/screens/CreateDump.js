@@ -42,8 +42,6 @@ export default function CreateDump({ route }) {
     const handleDelete = () => {
         setUrl('');
         dispatch(setInputState({ url: "", title, text:text }))
-        console.log(inputState.url, 'triggered delete');
-
     };
 
 
@@ -60,7 +58,6 @@ export default function CreateDump({ route }) {
 
     useFocusEffect(
         useCallback(() => {
-            console.log(inputState, 'triggered in usefocuseffect');
             setUrl(inputState.url)
         }, [inputState.url])
     )
@@ -101,8 +98,7 @@ export default function CreateDump({ route }) {
             setTextError(true);
         }else if(!url){
             setImageError(true)
-        }else {
-            // send data to your server!
+        }else {            
             const newItem = {
                 url,
                 title,
@@ -118,7 +114,6 @@ export default function CreateDump({ route }) {
 
     };
 
-    // console.log(items, '<<<ITEMS');
 
     const navigateToSearchGif = () => {
         setImageError(false)

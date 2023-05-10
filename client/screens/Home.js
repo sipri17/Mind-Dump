@@ -80,7 +80,6 @@ export default function Home() {
     
     useEffect(() => {
         const newArr = filteredArr.slice(0, limit)
-        console.log(filteredArr.length, '<<length');
         setSlicedArray(newArr)
         setLoading(false)
     }, [limit])
